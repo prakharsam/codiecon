@@ -31,7 +31,7 @@ public class SchedulerController {
     }
 
     @RequestMapping("/interviewer")
-    public boolean interviewer(@RequestParam String email, List<InterviewerPreferenceDto> preferenceDtos) {
+    public boolean interviewer(@RequestParam String email, List<String> preferenceDtos) {
 
         return schedulerService.interviewerPreference(email,preferenceDtos);
 

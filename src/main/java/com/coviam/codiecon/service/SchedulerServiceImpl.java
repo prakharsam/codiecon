@@ -1,6 +1,7 @@
 package com.coviam.codiecon.service;
 
 
+import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
 import com.coviam.codiecon.dto.CandidatePreferenceDto;
 import com.coviam.codiecon.dto.InterviewerPreferenceDto;
 import com.coviam.codiecon.model.Candidate;
@@ -35,19 +36,26 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     @Override
-    public boolean interviewerPreference(String email, List<InterviewerPreferenceDto> preferenceDtos) {
+    public boolean interviewerPreference(String email, List<String> preferenceDtos) {
 
         Interviewer interviewer = interviewerRepository.findById(email).get();
         String preference = "";
-        for (InterviewerPreferenceDto interviewerPreferenceDto : preferenceDtos)
+        for (String preferenceUnit : preferenceDtos)
         {
-            preference.concat(String.valueOf(interviewerPreferenceDto.getDay()));
-            preference.concat(String.valueOf(interviewerPreferenceDto.getSlot()));
+            preference.concat(String.valueOf(preferenceUnit.charAt(0)));
+            preference.concat(String.valueOf(preferenceUnit.charAt(1)));
 
         }
         interviewer.setPreference(preference);
 
         return false;
+    }
+
+    @Override
+    public List<CandidateInterviewerMapDto> schedule() {
+
+        long numberOfCandidates = candidateRepository.count();
+        return null;
     }
 
 }
