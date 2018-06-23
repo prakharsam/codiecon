@@ -1,7 +1,6 @@
 package com.coviam.codiecon.service;
 
 
-import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
 import com.coviam.codiecon.dto.CandidatePreferenceDto;
 
 import java.util.List;
@@ -12,5 +11,5 @@ public interface SchedulerService {
 
     boolean interviewerPreference(String email, List<String> preferenceDtos);
 
-    List<CandidateInterviewerMapDto> schedule();
+    void schedule();
 }

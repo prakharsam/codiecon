@@ -3,10 +3,8 @@ package com.coviam.codiecon.controller;
 
 import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
 import com.coviam.codiecon.dto.CandidatePreferenceDto;
-import com.coviam.codiecon.dto.InterviewerPreferenceDto;
 import com.coviam.codiecon.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
