@@ -16,6 +16,7 @@ public interface SchedulerService {
 
     boolean interviewerPreference(String email, List<String> preferenceDtos);
 
+    String runPythonScript();
 
     String checkCandidateAuthentication(String email, String pass);
 
@@ -26,5 +27,4 @@ public interface SchedulerService {
     String createInterviewer(InterviewerDto interviewerDto);
 
     void schedule();
-
 }

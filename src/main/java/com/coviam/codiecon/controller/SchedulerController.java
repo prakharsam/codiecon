@@ -29,11 +29,8 @@ public class SchedulerController {
     @Autowired
     SchedulerService schedulerService;
 
-
-
     @RequestMapping("/candidate-preference")
-    public boolean candidate(@RequestParam String email,@RequestBody CandidatePreferenceDto candidatePreferenceDto)
-    {
+    public boolean candidate(@RequestParam String email,@RequestBody CandidatePreferenceDto candidatePreferenceDto) {
         return schedulerService.candidatePreference(email,candidatePreferenceDto);
 
     }
@@ -47,10 +44,8 @@ public class SchedulerController {
 
 
     @RequestMapping("/interview-scheduling")
-    public boolean interviewScheduling(@RequestBody CandidateInterviewerMapDto candidateInterviewerMapDto) {
-
-        return false;
-
+    public String interviewScheduling() {
+        return schedulerService.runPythonScript();
     }
 
     @RequestMapping(value = "/candidate-auth", method = RequestMethod.POST)
