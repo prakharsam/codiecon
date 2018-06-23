@@ -3,26 +3,35 @@ package com.coviam.codiecon.service;
 
 import com.coviam.codiecon.dto.CandidateDto;
 import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
+import com.coviam.codiecon.dto.AlgoInputDto;
 import com.coviam.codiecon.dto.CandidatePreferenceDto;
 import com.coviam.codiecon.dto.InterviewerDto;
 import com.coviam.codiecon.model.Candidate;
-import com.coviam.codiecon.model.Interview;
+import com.coviam.codiecon.model.CandidateInterviewerMap;
 import com.coviam.codiecon.model.Interviewer;
+import com.coviam.codiecon.repository.CandidateInterviewMapRepository;
 import com.coviam.codiecon.repository.CandidateRepository;
 import com.coviam.codiecon.repository.InterviewerRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SchedulerServiceImpl implements SchedulerService{
 
+    private static final int NUMBER_OF_DAYS = 10;
+    private static final int INTERVIEW_DURATION = 1;
+
+
     @Autowired
-    CandidateRepository candidateRepository;
+    private CandidateRepository candidateRepository;
     @Autowired
-    InterviewerRepository interviewerRepository;
+    private InterviewerRepository interviewerRepository;
+    @Autowired
+    private CandidateInterviewMapRepository candidateInterviewMapRepository;
 
     @Override
     public boolean candidatePreference(String email, CandidatePreferenceDto candidatePreferenceDto) {
@@ -53,12 +62,38 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     @Override
-    public List<CandidateInterviewerMapDto> schedule() {
+    public void schedule() {
 
-        Interview interview = new Interview();
+        AlgoInputDto algoInputDto = new AlgoInputDto();
+        algoInputDto.setNumberOfInterviewers(((int) interviewerRepository.count()));
+        algoInputDto.setNumberOfCandidates((int) candidateRepository.count());
+
+        List<String> candidatePreferences = new ArrayList<>();
+        List<String> interviewerPreferences = new ArrayList<>();
+
+        List<Candidate> candidates = candidateRepository.findAll();
+        for( Candidate candidate : candidates){
+            candidatePreferences.add(candidate.getPreference());
+        }
+        algoInputDto.setCandidatePreferences(candidatePreferences);
+
+        List<Interviewer> interviewers = interviewerRepository.findAll();
+        for( Interviewer interviewer : interviewers){
+            interviewerPreferences.add(interviewer.getPreference());
+        }
+
+        algoInputDto.setNumberOfDays(NUMBER_OF_DAYS);
+        algoInputDto.setInterviewDuration(INTERVIEW_DURATION);
+
+        //call python function and get list of CandidateInterviewerMap
+
+        List<CandidateInterviewerMap> interviewList = new ArrayList<>();
+
+        for(CandidateInterviewerMap candidateInterviewerMap : interviewList){
+            candidateInterviewMapRepository.save(candidateInterviewerMap);
+        }
 
 
-        return null;
     }
 
     @Override
