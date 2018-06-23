@@ -68,10 +68,10 @@ public class SchedulerServiceImpl implements SchedulerService{
         return s;
     }
 
-    public String getOutput(){
+    public String getOutput() {
         String s = null;
         String outputString = null;
-        try{
+        try {
 
             Process p = Runtime.getRuntime().exec("python3 /Users/sandeepgupta/Documents/codeicon/codiecon/src/main/resources/interviewScheduling.py");
             BufferedReader stdInput = new BufferedReader(new
@@ -91,17 +91,15 @@ public class SchedulerServiceImpl implements SchedulerService{
             while ((s = stdError.readLine()) != null) {
                 System.out.println(s);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("exception happened - here's what I know: ");
             e.printStackTrace();
             System.exit(-1);
         }
 
 
-
         return outputString;
-      
+    }
     public void schedule() {
 
         AlgoInputDto algoInputDto = new AlgoInputDto();

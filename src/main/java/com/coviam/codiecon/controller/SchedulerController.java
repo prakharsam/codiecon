@@ -1,18 +1,15 @@
 package com.coviam.codiecon.controller;
 
-
-
-import com.coviam.codiecon.dto.*;
+import com.coviam.codiecon.dto.CandidateDto;
+import com.coviam.codiecon.dto.InterviewerDto;
+import com.coviam.codiecon.dto.ResponseDto;
 import com.coviam.codiecon.model.Candidate;
 import com.coviam.codiecon.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
 import com.coviam.codiecon.dto.CandidatePreferenceDto;
-import com.coviam.codiecon.service.SchedulerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
