@@ -1,7 +1,9 @@
 package com.coviam.codiecon.repository;
 
 import com.coviam.codiecon.model.Interviewer;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface InterviewerRepository extends CrudRepository<Interviewer,String> {
+@Repository
+public interface InterviewerRepository extends MongoRepository<Interviewer, String> {
 }

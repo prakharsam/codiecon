@@ -3,8 +3,8 @@ package com.coviam.codiecon.service;
 
 import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
 import com.coviam.codiecon.dto.CandidatePreferenceDto;
-import com.coviam.codiecon.dto.InterviewerPreferenceDto;
 import com.coviam.codiecon.model.Candidate;
+import com.coviam.codiecon.model.Interview;
 import com.coviam.codiecon.model.Interviewer;
 import com.coviam.codiecon.repository.CandidateRepository;
 import com.coviam.codiecon.repository.InterviewerRepository;
@@ -47,6 +47,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 
         }
         interviewer.setPreference(preference);
+        interviewer.setSlotsAvailable(preference.length()/2);
 
         return false;
     }
@@ -54,7 +55,9 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Override
     public List<CandidateInterviewerMapDto> schedule() {
 
-        long numberOfCandidates = candidateRepository.count();
+        Interview interview = new Interview();
+
+
         return null;
     }
 
