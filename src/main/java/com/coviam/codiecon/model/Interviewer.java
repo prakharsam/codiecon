@@ -1,31 +1,34 @@
 package com.coviam.codiecon.model;
 
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 
-@Entity
-@Table(name = "interviewer")
+@Document(collection = "interviewer")
 public class Interviewer {
 
-    @Column(name = "name")
     String name;
     @Id
-    @Column(name = "email")
     String email;
-    @Column(name = "pass")
     String pass;
-    @Column(name = "preference")
     String preference;
+    int slotsAvailable;
 
-    public Interviewer(String name, String email, String pass, String preference) {
+    public int getSlotsAvailable() {
+        return slotsAvailable;
+    }
+
+    public void setSlotsAvailable(int slotsAvailable) {
+        this.slotsAvailable = slotsAvailable;
+    }
+
+    public Interviewer(String name, String email, String pass, String preference, int slotsAvailable) {
+
         this.name = name;
         this.email = email;
         this.pass = pass;
         this.preference = preference;
+        this.slotsAvailable = slotsAvailable;
     }
 
     public String getName() {

@@ -1,25 +1,18 @@
 package com.coviam.codiecon.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
 
-@Table(name = "candidate-interviwer-map")
+@Document(collection = "candidate-interviewer-map")
 public class CandidateInterviewerMap {
 
-    @Column(name = "candidate")
     private String candidate;
 
-    @Column(name = "interviewer")
     private String interviewer;
 
-    @Column(name = "timeslot")
     private int timeslot;
 
-    @Column(name = "day")
     private int day;
 
     public CandidateInterviewerMap(String candidate, String interviewer, int timeslot, int day) {

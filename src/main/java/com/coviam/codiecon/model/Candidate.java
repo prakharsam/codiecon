@@ -1,26 +1,16 @@
 package com.coviam.codiecon.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-
-@Entity
-@Table(name = "candidate")
+@Document(collection = "candidate")
 public class Candidate {
 
-    @Column(name = "name")
     String name;
     @Id
-    @Column(name = "email")
     String email;
-    @Column(name = "pass")
     String pass;
-    @Column(name = "day")
     int day;
-    @Column(name = "preference")
     String preference;
 
     public Candidate(String name, String email, String pass, int day, String preference) {
