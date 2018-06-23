@@ -17,8 +17,6 @@ public interface SchedulerService {
     boolean interviewerPreference(String email, List<String> preferenceDtos);
 
 
-    List<CandidateInterviewerMapDto> schedule();
-
     String checkCandidateAuthentication(String email, String pass);
 
     String checkInterviewerAuthentication(String email, String pass);

@@ -4,7 +4,6 @@ package com.coviam.codiecon.controller;
 
 import com.coviam.codiecon.dto.*;
 import com.coviam.codiecon.model.Candidate;
-import com.coviam.codiecon.model.Interview;
 import com.coviam.codiecon.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
