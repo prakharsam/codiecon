@@ -22,8 +22,10 @@ public class Interviewer {
         this.slotsAvailable = slotsAvailable;
     }
 
-    public Interviewer(String name, String email, String pass, String preference, int slotsAvailable) {
+    public Interviewer() {
+    }
 
+    public Interviewer(String name, String email, String pass, String preference, int slotsAvailable) {
         this.name = name;
         this.email = email;
         this.pass = pass;
