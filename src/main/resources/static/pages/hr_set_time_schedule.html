@@ -8,6 +8,7 @@
 <div class="jumbotron" data-ng-init="getInterviewScheduleDate()">
 	<div class="container">
 		<form class="form-group" ng-submit="scheduleInterviewTime()">
+		<input type="text" hidden value={{interviewer_email}} id="interviewer_email_from_preference">
 		<table class="table">
 			<tr>
 				<th>

@@ -54,7 +54,7 @@ app.controller('MainController',function($scope, $location, $http, $rootScope){
 	    var interviewer_pass = document.getElementById("interviewer_pass").value;
 	    var request = $http({
                 method: "POST",
-                url: "http://localhost:8080/schedule/candidate-auth",
+                url: "http://localhost:8080/schedule/interviewer-auth",
                 headers: {'Content-Type': 'application/json'},
                 data: {
                         "name" : "",
@@ -105,6 +105,7 @@ app.controller('MainController',function($scope, $location, $http, $rootScope){
 	}
 
 	$scope.scheduleInterviewTime = function(){
+	    var interviewer_email_from_preference = document.getElementById("interviewer_email_from_preference").value
 		$scope.schedule = []
 		for(var i=0;i<5;i++){
 			for(var column=0; column<12; column++){
@@ -118,7 +119,20 @@ app.controller('MainController',function($scope, $location, $http, $rootScope){
 				}
 			}
 		}
-		alert($scope.schedule);
+		var request = $http({
+                method: "POST",
+                url: "http://localhost:8080/schedule/interviewer?email="+interviewer_email_from_preference,
+                headers: {'Content-Type': 'application/json'},
+                data: {
+                       "preferenceDtos" : JSON.stringify($scope.schedule)
+                    }
+             }).then(function successCallback(response){
+                alert("Hogya");
+                $location.path('/candidate-schedule');
+            }, function errorCallback(response) {
+                alert("Error");
+            });
+
 	}
 
 	$scope.getEmployeeSchedule = function() {

@@ -57,6 +57,7 @@ public class SchedulerServiceImpl implements SchedulerService{
         }
         interviewer.setPreference(preference);
         interviewer.setSlotsAvailable(preference.length()/2);
+        interviewerRepository.save(interviewer);
 
         return false;
     }
