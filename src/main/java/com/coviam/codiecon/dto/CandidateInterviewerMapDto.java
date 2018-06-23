@@ -4,14 +4,14 @@ public class CandidateInterviewerMapDto {
 
     private String candidate;
     private String interviewer;
-    private int timeslot;
+    private int timeSlot;
     private int day;
 
-    public CandidateInterviewerMapDto(String candidate, String interviewer, int timeslot, int day) {
+    public CandidateInterviewerMapDto(String candidate, String interviewer, int timeSlot, int day) {
 
         this.candidate = candidate;
         this.interviewer = interviewer;
-        this.timeslot = timeslot;
+        this.timeSlot = timeSlot;
         this.day = day;
     }
 
@@ -31,12 +31,12 @@ public class CandidateInterviewerMapDto {
         this.interviewer = interviewer;
     }
 
-    public int getTimeslot() {
-        return timeslot;
+    public int getTimeSlot() {
+        return timeSlot;
     }
 
-    public void setTimeslot(int timeslot) {
-        this.timeslot = timeslot;
+    public void setTimeSlot(int timeSlot) {
+        this.timeSlot = timeSlot;
     }
 
     public int getDay() {

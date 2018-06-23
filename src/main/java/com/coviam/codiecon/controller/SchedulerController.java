@@ -1,13 +1,23 @@
 package com.coviam.codiecon.controller;
 
 
-import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
-import com.coviam.codiecon.dto.CandidatePreferenceDto;
-import com.coviam.codiecon.dto.InterviewerPreferenceDto;
+
+import com.coviam.codiecon.dto.*;
+import com.coviam.codiecon.model.Candidate;
 import com.coviam.codiecon.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.coviam.codiecon.dto.CandidateInterviewerMapDto;
+import com.coviam.codiecon.dto.CandidatePreferenceDto;
+import com.coviam.codiecon.service.SchedulerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.List;
 
@@ -38,19 +48,17 @@ public class SchedulerController {
         return schedulerService.runPythonScript();
     }
 
-    @RequestMapping("/candidate-auth")
-    public String candidateAuth( @RequestParam String firstName) {
-
-        return("");
-
+    @RequestMapping(value = "/candidate-auth", method = RequestMethod.POST)
+    public ResponseDto<?> candidateAuth(@RequestBody Candidate candidate) {
+        String result = schedulerService.checkCandidateAuthentication(candidate.getEmail() , candidate.getPass());
+        return new ResponseDto<String>(result);
     }
 
 
-    @RequestMapping("/interviewer-auth")
-    public String interviweerAuth( @RequestParam String firstName) {
-
-        return("");
-
+    @RequestMapping(value = "/interviewer-auth", method = RequestMethod.POST)
+    public ResponseDto<?> interviweerAuth(@RequestBody InterviewerDto interview) {
+        String result = schedulerService.checkInterviewerAuthentication(interview.getEmail(), interview.getPass());
+        return new ResponseDto<String>(result);
     }
 
     @RequestMapping("/admin-auth")
@@ -68,12 +76,16 @@ public class SchedulerController {
     }
 
 
+    @RequestMapping(value = "/create-candidate", method = RequestMethod.POST)
+    public ResponseEntity<?> createCandidate(@RequestBody CandidateDto candidateDto ) {
+        String createCandidate = schedulerService.createCandidate(candidateDto);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 
-
-
-
-
-
-
+    @RequestMapping(value = "/create-interviewer", method = RequestMethod.POST)
+    public ResponseEntity<?> createInterviewer(@RequestBody  InterviewerDto interviewerDto){
+        String createInterViewer = schedulerService.createInterviewer(interviewerDto);
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
 
 }
