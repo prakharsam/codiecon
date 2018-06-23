@@ -4,9 +4,9 @@ package com.coviam.codiecon.dto;
 public class CandidatePreferenceDto {
 
     int day;
-    char[] preference;
+    String preference;
 
-    public CandidatePreferenceDto(int day, char[] preference) {
+    public CandidatePreferenceDto(int day, String preference) {
         this.day = day;
         this.preference = preference;
     }
@@ -22,11 +22,11 @@ public class CandidatePreferenceDto {
         this.day = day;
     }
 
-    public char[] getPreference() {
+    public String  getPreference() {
         return preference;
     }
 
-    public void setPreference(char[] preference) {
+    public void setPreference(String preference) {
         this.preference = preference;
     }
 }
