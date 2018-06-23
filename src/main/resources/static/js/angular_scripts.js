@@ -2,7 +2,7 @@ var app = angular.module('InterviewScheduler', ['ngRoute']);
 
 app.config(function($routeProvider) {
   $routeProvider
-  .when("/login", {
+  .when("/candidate-login", {
   	templateUrl : "pages/login.html"
   })
   .when("/candidate-schedule", {
@@ -19,7 +19,10 @@ app.config(function($routeProvider) {
   })
   .when("/generate-interview-schedule", {
   	templateUrl : "pages/schedule_interview.html"
-  });
+  })
+  .when("/interviewer-login", {
+     	templateUrl : "pages/interviewer_login.html"
+   });
 });
 
 app.controller('MainController',function($scope, $location, $http, $rootScope){
@@ -39,24 +42,41 @@ app.controller('MainController',function($scope, $location, $http, $rootScope){
 							"preference" : ""
 						}
                  }).then(function successCallback(response){
-                 	$rootScope.candidate_email = JSON.stringify(response.data.response)
+                 	$rootScope.candidate_email = response.data.response
                  	$location.path('/candidate-schedule');
                	}, function errorCallback(response) {
     				alert("Error");
     			});
 	};
 
+	$scope.InterviewerLogin = function() {
+	    var interviewer_email = document.getElementById("interviewer_email").value;
+	    var interviewer_pass = document.getElementById("interviewer_pass").value;
+	    var request = $http({
+                method: "POST",
+                url: "http://localhost:8080/schedule/candidate-auth",
+                headers: {'Content-Type': 'application/json'},
+                data: {
+                        "name" : "",
+                        "email" : interviewer_email,
+                        "pass" : interviewer_pass,
+                        "day" : 7,
+                        "preference" : ""
+                    }
+             }).then(function successCallback(response){
+                $rootScope.interviewer_email = response.data.response
+                $location.path('/hr-schedule');
+            }, function errorCallback(response) {
+                alert("Error");
+            });
+	}
+
 	$scope.setCandidatePreference = function(){
 		var preference1 = document.getElementById("pref1select").value;
 		var preference2 = document.getElementById("pref2select").value;
 		var preference3 = document.getElementById("pref3select").value;
 		var preference4 = document.getElementById("pref4select").value;
-		var candidate_prefereance_array = new Array();
-		candidate_prefereance_array.push(preference1);
-		candidate_prefereance_array.push(preference2);
-		candidate_prefereance_array.push(preference3);
-		candidate_prefereance_array.push(preference4);
-
+		var preferenceString = preference1+preference2+preference3+preference4;
 		var candidate_email_from_preference = document.getElementById("candidate_email_from_preference").value;
 
 		var request = $http({
@@ -65,7 +85,7 @@ app.controller('MainController',function($scope, $location, $http, $rootScope){
                     headers: {'Content-Type': 'application/json'},
                     data: {
 							"day": 1,
-							"preference" : ["m", "n", "e", "a"]
+							"preference" : preferenceString
 						}
                  }).then(function successCallback(response){
           			alert("Hogya");
