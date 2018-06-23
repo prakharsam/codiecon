@@ -7,13 +7,11 @@ import com.coviam.codiecon.dto.InterviewerPreferenceDto;
 import com.coviam.codiecon.service.SchedulerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("schedule")
 public class SchedulerController {
@@ -21,11 +19,8 @@ public class SchedulerController {
     @Autowired
     SchedulerService schedulerService;
 
-
-
     @RequestMapping("/candidate-preference")
-    public boolean candidate(@RequestParam String email,@RequestBody CandidatePreferenceDto candidatePreferenceDto)
-    {
+    public boolean candidate(@RequestParam String email,@RequestBody CandidatePreferenceDto candidatePreferenceDto) {
         return schedulerService.candidatePreference(email,candidatePreferenceDto);
 
     }
@@ -39,10 +34,8 @@ public class SchedulerController {
 
 
     @RequestMapping("/interview-scheduling")
-    public boolean interviewScheduling(@RequestBody CandidateInterviewerMapDto candidateInterviewerMapDto) {
-
-        return false;
-
+    public String interviewScheduling() {
+        return schedulerService.runPythonScript();
     }
 
     @RequestMapping("/candidate-auth")

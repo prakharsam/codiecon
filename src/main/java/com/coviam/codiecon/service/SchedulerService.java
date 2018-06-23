@@ -13,4 +13,6 @@ public interface SchedulerService {
     boolean interviewerPreference(String email, List<String> preferenceDtos);
 
     List<CandidateInterviewerMapDto> schedule();
+
+    String runPythonScript();
 }
