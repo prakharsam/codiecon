@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#!/candidate-schedule">Interview Scheduler</a>
+ <div class="" style="padding-left: 75%">
+ 	<button class="btn btn-outline-success">Log out</button>
+ </div>
+</nav>
+<br>
+
+<div class="jumbotron">
+	<div class="container">
+		
+		<form class="form-row" enctype="multipart/form-data" method="post" action="localhost:8080/plan/upload-plans">
+			<div class="form-group col-12">
+				<label>Upload Candidate File</label>
+				<input type="file" id="upload_candidate_file" class="form-control-file">
+			</div>
+			<div class="form-group col-6">
+				<input type="submit" value="Upload Candidate File" class="btn btn-outline-success">
+			</div>
+		</form>
+		<hr>
+		<form class="form-row" enctype="multipart/form-data" method="post" action="localhost:8080/plan/upload-plans">
+			<div class="form-group col-12">
+				<label>Upload Interviewer File</label>
+				<input type="file" name="upload_interviewer_file" class="form-control-file">
+			</div>
+			<div class="form-group col-6">
+				<input type="submit" value="Upload Interviewer file" class="btn btn-outline-success">
+			</div>
+		</form>
+	
+	</div>
+</div>

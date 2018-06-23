@@ -17,8 +17,11 @@ public class Candidate {
         this.name = name;
         this.email = email;
         this.pass = pass;
-        this.day = day;
-        this.preference = preference;
+        this.day = -1;
+        this.preference = "MAEN";
+    }
+
+    public Candidate() {
     }
 
     public String getName() {

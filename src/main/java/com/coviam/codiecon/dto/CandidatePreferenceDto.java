@@ -1,6 +1,5 @@
 package com.coviam.codiecon.dto;
 
-import org.springframework.web.bind.annotation.RequestParam;
 
 public class CandidatePreferenceDto {
 
@@ -10,6 +9,9 @@ public class CandidatePreferenceDto {
     public CandidatePreferenceDto(int day, char[] preference) {
         this.day = day;
         this.preference = preference;
+    }
+
+    public CandidatePreferenceDto() {
     }
 
     public int getDay() {
