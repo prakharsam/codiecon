@@ -3,42 +3,30 @@ package com.coviam.codiecon.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * @author: Sandeep Gupta
+ * */
 
 @Document(collection = "interviewer")
 public class Interviewer {
 
-    String name;
     @Id
     String email;
-    String pass;
-    String preference;
-    int slotsAvailable;
-
-    public int getSlotsAvailable() {
-        return slotsAvailable;
-    }
-
-    public void setSlotsAvailable(int slotsAvailable) {
-        this.slotsAvailable = slotsAvailable;
-    }
+    String name;
+    String password;
+    List<String> availablityOfInterviewer;
 
     public Interviewer() {
     }
 
-    public Interviewer(String name, String email, String pass, String preference, int slotsAvailable) {
-        this.name = name;
+    public Interviewer(String email, String name, String password, List<String> availablityOfInterviewer) {
         this.email = email;
-        this.pass = pass;
-        this.preference = preference;
-        this.slotsAvailable = slotsAvailable;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
+        this.password = password;
+        this.availablityOfInterviewer = availablityOfInterviewer;
     }
 
     public String getEmail() {
@@ -49,19 +37,54 @@ public class Interviewer {
         this.email = email;
     }
 
-    public String getPass() {
-        return pass;
+    public String getName() {
+        return name;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getPreference() {
-        return preference;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPreference(String preference) {
-        this.preference = preference;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<String> getAvailablityOfInterviewer() {
+        return availablityOfInterviewer;
+    }
+
+    public void setAvailablityOfInterviewer(List<String> availablityOfInterviewer) {
+        this.availablityOfInterviewer = availablityOfInterviewer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Interviewer that = (Interviewer) o;
+        return Objects.equals(email, that.email) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(availablityOfInterviewer, that.availablityOfInterviewer);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(email, name, password, availablityOfInterviewer);
+    }
+
+    @Override
+    public String toString() {
+        return "Interviewer{" +
+                "email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", availablityOfInterviewer=" + availablityOfInterviewer +
+                '}';
     }
 }

@@ -2,6 +2,9 @@ var app = angular.module('InterviewScheduler', ['ngRoute']);
 
 app.config(function($routeProvider) {
   $routeProvider
+  .when("/login", {
+    	templateUrl : "pages/admin-login.html"
+   })
   .when("/candidate-login", {
   	templateUrl : "pages/login.html"
   })

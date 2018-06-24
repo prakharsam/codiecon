@@ -1,19 +1,22 @@
 package com.coviam.codiecon.dto;
 
+import java.util.List;
+import java.util.Objects;
+
 public class InterviewerDto {
     String name;
     String email;
-    String pass;
-    String preference;
-    int slotsAvailable;
+    String password;
+    List<String> availablityOfInterviewer;
 
+    public InterviewerDto() {
+    }
 
-    public InterviewerDto(String name, String email, String pass, String preference, int slotsAvailable) {
+    public InterviewerDto(String name, String email, String password, List<String> availablityOfInterviewer) {
         this.name = name;
         this.email = email;
-        this.pass = pass;
-        this.preference = preference;
-        this.slotsAvailable = slotsAvailable;
+        this.password = password;
+        this.availablityOfInterviewer = availablityOfInterviewer;
     }
 
     public String getName() {
@@ -32,30 +35,46 @@ public class InterviewerDto {
         this.email = email;
     }
 
-    public String getPass() {
-        return pass;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getPreference() {
-        return preference;
+    public List<String> getAvailablityOfInterviewer() {
+        return availablityOfInterviewer;
     }
 
-    public void setPreference(String preference) {
-        this.preference = preference;
+    public void setAvailablityOfInterviewer(List<String> availablityOfInterviewer) {
+        this.availablityOfInterviewer = availablityOfInterviewer;
     }
 
-    public int getSlotsAvailable() {
-        return slotsAvailable;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InterviewerDto that = (InterviewerDto) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(availablityOfInterviewer, that.availablityOfInterviewer);
     }
 
-    public void setSlotsAvailable(int slotsAvailable) {
-        this.slotsAvailable = slotsAvailable;
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, email, password, availablityOfInterviewer);
     }
 
-    public InterviewerDto() {
+    @Override
+    public String toString() {
+        return "InterviewerDto{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", availablityOfInterviewer=" + availablityOfInterviewer +
+                '}';
     }
 }

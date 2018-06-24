@@ -269,9 +269,6 @@ def crossover(parentA,parentB):
 			parentB[timeOfParentB][keyOfParentB][1] = parentB[timeOfParentA][keyOfParentA][1]
 			parentB[timeOfParentA][keyOfParentA][1] = temp
 
-	if(check(parentA) == False):
-		print (' Because of crossover')
-		exit()
 	# print (str(parentA) + ' ' + str(parentB))
 	return [parentA,parentB]
 
@@ -288,7 +285,8 @@ def selection(cummulativeFitness):
 	totalScore = cummulativeFitness[len(cummulativeFitness)-1] # total score of fitness function
 	# print (totalScore)
 	if(totalScore == 1):
-		return "Cannot find a solution"
+		print("Cannot find a solution")
+		exit()
 	randomSelection = random.randrange(0,totalScore-1,1)
 	index = bisect.bisect_left(cummulativeFitness,randomSelection)
 	index -= 1
