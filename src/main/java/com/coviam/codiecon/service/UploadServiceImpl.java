@@ -70,9 +70,9 @@ public class UploadServiceImpl implements UploadService{
                 Candidate candidate = new Candidate();
                 candidate.setEmail(uploadDto.getEmail());
                 candidate.setName(uploadDto.getName());
-                candidate.setDay(0);
+                candidate.setDay(-1);
                 candidate.setPassword(encryptPassword());
-                candidate.setPreference("MAEN");
+                candidate.setPreference("NONE");
                 candidateArrayList.add(candidate);
             }
             batchStoreCandidate(email,candidateArrayList);
