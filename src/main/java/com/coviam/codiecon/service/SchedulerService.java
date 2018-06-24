@@ -8,7 +8,17 @@ import java.util.List;
 
 public interface SchedulerService {
 
+    List<AlgoInputObject> getAllAlgoinputObject(String email);
+
+    AlgoInputObject getAlgoInputObjectById(String email,String index);
+
+    Boolean isVisibleGenerate(String email,String index);
+
+    Boolean isValidCandidate(CandidateDto candidateDto);
+
     Boolean createAdmin(AdminDto adminDto);
+
+    Boolean checkAdmin(AdminDto adminDto);
 
     Boolean inputAll(InputAllObject inputAllObject);
 
@@ -22,9 +32,13 @@ public interface SchedulerService {
 
     String checkInterviewerAuthentication(String email, String pass);
 
-    String createCandidate(CandidateDto candidateDto);
+    Boolean createCandidate(CandidateDto candidateDto);
 
-    String createInterviewer(InterviewerDto interviewerDto);
+    Boolean createInterviewer(InterviewerDto interviewerDto);
+
+    Boolean isValidInterviewer(InterviewerDto interviewerDto);
+
+    Boolean basicScheduleDetails(String email,String startDate,String numberOfDays,String interviewDuration);
 
     void schedule();
 }

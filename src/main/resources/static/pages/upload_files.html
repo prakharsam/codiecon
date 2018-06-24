@@ -8,18 +8,20 @@
 
 <div class="jumbotron">
 	<div class="container">
-		
-		<form class="form-row" enctype="multipart/form-data" method="post" action="localhost:8080/plan/upload-plans">
+		<iframe width="250" height="50" border="0" name="dummyframe" id="dummyframe" style="margin-left:100px;"></iframe>
+
+		<form class="form-row" id="upload-file-candidates" enctype="multipart/form-data" method="post" action="http://localhost:8080/schedule/upload-candidate/{{adminEmail}}" target="dummyframe">
 			<div class="form-group col-12">
 				<label>Upload Candidate File</label>
-				<input type="file" id="upload_candidate_file" class="form-control-file">
+				<input type="file" name="upload_candidate_file" id="upload_candidate_file" class="form-control-file">
 			</div>
 			<div class="form-group col-6">
 				<input type="submit" value="Upload Candidate File" class="btn btn-outline-success">
 			</div>
+
 		</form>
 		<hr>
-		<form class="form-row" enctype="multipart/form-data" method="post" action="localhost:8080/plan/upload-plans">
+		<form class="form-row" enctype="multipart/form-data" method="post" action="http://localhost:8080/schedule/upload-interview/{{adminEmail}}">
 			<div class="form-group col-12">
 				<label>Upload Interviewer File</label>
 				<input type="file" name="upload_interviewer_file" class="form-control-file">

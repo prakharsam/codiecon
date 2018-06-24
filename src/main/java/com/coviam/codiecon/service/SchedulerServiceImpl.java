@@ -17,8 +17,10 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 /**
@@ -49,6 +51,15 @@ public class SchedulerServiceImpl implements SchedulerService{
         }
         return false;
     }
+
+    @Override
+    public Boolean checkAdmin(AdminDto adminDto) {
+        if(adminRepository.existsById(adminDto.getEmail())){
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public Boolean inputAll(InputAllObject inputAllObject) {
@@ -239,18 +250,100 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     @Override
-    public String createCandidate(CandidateDto candidateDto) {
+    public Boolean createCandidate(CandidateDto candidateDto) {
         Candidate candidate = new Candidate();
         BeanUtils.copyProperties(candidateDto, candidate);
         candidateRepository.save(candidate);
-        return "Success";
+        return true;
     }
 
     @Override
-    public String createInterviewer(InterviewerDto interviewerDto){
+    public List<AlgoInputObject> getAllAlgoinputObject(String email) {
+        if(adminRepository.existsById(email)){
+            return adminRepository.findById(email).get().getAlgoInputObjectList();
+        }
+        return null;
+    }
+
+    @Override
+    public AlgoInputObject getAlgoInputObjectById(String email, String index) {
+        if(adminRepository.existsById(email)){
+            if(adminRepository.findById(email).get().getAlgoInputObjectList().size() < Integer.valueOf(index)){
+                return adminRepository.findById(email).get().getAlgoInputObjectList().get(Integer.valueOf(index));
+            }
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean isVisibleGenerate(String email, String index) {
+        if(adminRepository.existsById(email)){
+            if(adminRepository.findById(email).get().getAlgoOutputObjectList().get(Integer.valueOf(index)) != null){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean isValidCandidate(CandidateDto candidateDto) {
+        if(candidateRepository.existsById(candidateDto.getEmail())){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean isValidInterviewer(InterviewerDto interviewerDto) {
+        if(interviewerRepository.existsById(interviewerDto.getEmail())){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean basicScheduleDetails(String email, String startDate, String numberOfDays, String interviewDuration) {
+        if(adminRepository.existsById(email)){
+            AlgoInputObject algoInputObject = new AlgoInputObject();
+            try {
+                algoInputObject.setStartDate(new SimpleDateFormat("dd/MM/yyyy").parse(startDate));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            algoInputObject.setNumberOfDays(Integer.valueOf(numberOfDays));
+            algoInputObject.setInterviewDuration(Integer.valueOf(interviewDuration));
+            algoInputObject.setInterviewerDtoList(null);
+            algoInputObject.setCandidateDtoList(null);
+            Admin admin = new Admin();
+            admin = adminRepository.findById(email).get();
+            List<AlgoInputObject> algoInputObjectList = admin.getAlgoInputObjectList();
+            if(algoInputObjectList == null){
+                List<AlgoInputObject> algoInputObjectList1 = new ArrayList<>();
+                algoInputObjectList1.add(algoInputObject);
+                List<AlgoOutputObject> algoOutputObjectList1 = new ArrayList<>();
+                algoInputObjectList1.add(null);
+                admin.setAlgoInputObjectList(algoInputObjectList1);
+                admin.setAlgoOutputObjectList(algoOutputObjectList1);
+            }
+            else{
+                algoInputObjectList.add(algoInputObject);
+                List<AlgoOutputObject> algoOutputObjectList = admin.getAlgoOutputObjectList();
+                algoOutputObjectList.add(null);
+                admin.setAlgoOutputObjectList(algoOutputObjectList);
+                admin.setAlgoInputObjectList(algoInputObjectList);
+            }
+            adminRepository.save(admin);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean createInterviewer(InterviewerDto interviewerDto){
         Interviewer interviewer = new Interviewer();
         BeanUtils.copyProperties(interviewerDto, interviewer);
         interviewerRepository.save(interviewer);
-        return "Success";
+        return true;
     }
 }
