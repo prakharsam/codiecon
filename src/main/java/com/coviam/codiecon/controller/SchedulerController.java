@@ -151,4 +151,11 @@ public class SchedulerController {
         uploadService.uploadFileInterview(email,multiPartFile);
         return ("uploaded Interviewer file successfully");
     }
+
+    @RequestMapping(value="/submit/{email}",method = RequestMethod.GET)
+    public String submitUploadFiles(@PathVariable String email)
+    {
+        uploadService.SendEmails(email);
+        return ("Emails Sent");
+    }
 }
