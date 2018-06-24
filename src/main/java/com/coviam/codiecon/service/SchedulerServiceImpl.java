@@ -13,10 +13,8 @@ import com.coviam.codiecon.repository.InterviewerRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,40 +80,79 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     @Override
-    public boolean candidatePreference(String email, CandidatePreferenceDto candidatePreferenceDto) {
-
-//        Candidate candidate = candidateRepository.findById(email).get();
-//        candidate.setDay(candidatePreferenceDto.getDay());
-//        String candidatePreference = String.valueOf(candidatePreferenceDto.getPreference());
-//        candidate.setPreference(candidatePreference);
-//        candidateRepository.save(candidate);
+    public Boolean candidatePreference(String email, CandidatePreferenceDto candidatePreferenceDto){
+        if(candidateRepository.existsById(email)){
+            Candidate candidate = candidateRepository.findById(email).get();
+            candidate.setDay(candidatePreferenceDto.getDay());
+            String candidatePreference = String.valueOf(candidatePreferenceDto.getPreference());
+            candidate.setPreference(candidatePreference);
+            candidateRepository.save(candidate);
+        }
         return true;
     }
 
     @Override
-    public boolean interviewerPreference(String email, List<String> preferenceDtos) {
-
+    public Boolean interviewerPreference(String email, List<String> preferenceDtos) {
+        if(interviewerRepository.existsById(email)){
+            Interviewer interviewer =  interviewerRepository.findById(email).get();
+            interviewer.setAvailablityOfInterviewer(preferenceDtos);
+            interviewerRepository.save(interviewer);
+            return true;
+        }
         return false;
     }
 
     @Override
-    public String runPythonScript(String email) {
-        Boolean isCreatedInputFile = generateInputFile(email);
+    public String runPythonScript(String email,Integer index){
+        Boolean isCreatedInputFile = generateInputFile(email,index);
         if(isCreatedInputFile == true){
             String s = getOutput();
-            return "True";
+            Boolean isOutputFileCreated = readOutputfile(email,index);
+            if(isOutputFileCreated) {
+                return "True";
+            }
         }
         return "False";
     }
 
-    public Boolean generateInputFile(String email){
+    public Boolean readOutputfile(String email,Integer index) {
+        File file = new File("/Users/sandeepgupta/Documents/codeicon/codiecon/src/main/resources/out");
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            AlgoOutputObject algoOutputObject = new AlgoOutputObject();
+            List<InterviewCandidateMapped> interviewCandidateMappeds = new ArrayList<>();
+            String st;
+            AlgoInputObject algoInputObjectList = adminRepository.findById(email).get().getAlgoInputObjectList().get(index);
+            while ((st = br.readLine()) != null){
+                String w[]=st.split(" ");
+                InterviewCandidateMapped interviewCandidateMapped = new InterviewCandidateMapped();
+                interviewCandidateMapped.setCandidate(algoInputObjectList.getCandidateDtoList().get(Integer.valueOf(w[3])).getEmail());
+                interviewCandidateMapped.setDay(Integer.valueOf(w[0]));
+                interviewCandidateMapped.setInterviewer(algoInputObjectList.getInterviewerDtoList().get(Integer.valueOf(w[2])).getEmail());
+                interviewCandidateMapped.setTimeSlot(Integer.valueOf(w[1]));
+                interviewCandidateMappeds.add(interviewCandidateMapped);
+            }
+            algoOutputObject.setInterviewCandidateMappedList(interviewCandidateMappeds);
+            Admin admin = adminRepository.findById(email).get();
+            List<AlgoOutputObject> algoOutputObjectList =  admin.getAlgoOutputObjectList();
+            algoOutputObjectList.set(index,algoOutputObject);
+            adminRepository.save(admin);
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+
+        return false;
+    }
+
+    public Boolean generateInputFile(String email,Integer index){
         try {
             FileWriter fw = new FileWriter("/Users/sandeepgupta/Documents/codeicon/codiecon/src/main/resources/in");
             if(adminRepository.existsById(email)){
                 Admin admin = adminRepository.findById(email).get();
                 List<AlgoInputObject> algoInputObjectList = admin.getAlgoInputObjectList();
                 if(algoInputObjectList != null) {
-                    AlgoInputObject algoInputObject = algoInputObjectList.get(0);
+                    AlgoInputObject algoInputObject = algoInputObjectList.get(index);
                     fw.write(algoInputObject.getNumberOfDays().toString());
                     fw.write('\n');
                     fw.write(algoInputObject.getInterviewDuration().toString());
@@ -185,10 +222,9 @@ public class SchedulerServiceImpl implements SchedulerService{
             e.printStackTrace();
             System.exit(-1);
         }
-
-
         return outputString;
     }
+
     public void schedule() {
 
 //        AlgoInputObject algoInputObject = new AlgoInputObject();
@@ -258,6 +294,14 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     @Override
+    public AlgoOutputObject getAlgoOutputObject(String email, Integer index) {
+        if(adminRepository.existsById(email)){
+            return adminRepository.findById(email).get().getAlgoOutputObjectList().get(index);
+        }
+        return null;
+    }
+
+    @Override
     public List<AlgoInputObject> getAllAlgoinputObject(String email) {
         if(adminRepository.existsById(email)){
             return adminRepository.findById(email).get().getAlgoInputObjectList();
@@ -269,7 +313,34 @@ public class SchedulerServiceImpl implements SchedulerService{
     public AlgoInputObject getAlgoInputObjectById(String email, String index) {
         if(adminRepository.existsById(email)){
             if(adminRepository.findById(email).get().getAlgoInputObjectList().size() < Integer.valueOf(index)){
-                return adminRepository.findById(email).get().getAlgoInputObjectList().get(Integer.valueOf(index));
+                Admin admin = adminRepository.findById(email).get();
+                AlgoInputObject algoInputObject =  admin.getAlgoInputObjectList().get(Integer.valueOf(index));
+                List<CandidateDto> candidateDtoList = algoInputObject.getCandidateDtoList();
+                for(int i=0;i<candidateDtoList.size();i++){
+                    if(candidateDtoList.get(i).getDay() == -1){
+                        if(candidateRepository.findById(candidateDtoList.get(i).getEmail()).get().getDay() != -1){
+                            candidateDtoList.get(i).setDay(candidateRepository.findById(candidateDtoList.get(i).getEmail()).get().getDay());
+                        }
+                    }
+                }
+
+                algoInputObject.setCandidateDtoList(candidateDtoList);
+
+                List<InterviewerDto> interviewerDtoList = algoInputObject.getInterviewerDtoList();
+                for(int i=0;i<interviewerDtoList.size();i++){
+                    if(interviewerDtoList.get(i).getAvailablityOfInterviewer() == null){
+                        if(interviewerRepository.findById(interviewerDtoList.get(i).getEmail()).get().getAvailablityOfInterviewer() != null){
+                            interviewerDtoList.get(i).setAvailablityOfInterviewer(interviewerRepository.findById(interviewerDtoList.get(i).getEmail()).get().getAvailablityOfInterviewer());
+                        }
+                    }
+                }
+                algoInputObject.setInterviewerDtoList(interviewerDtoList);
+
+                List<AlgoInputObject> algoInputObjectList = admin.getAlgoInputObjectList();
+                algoInputObjectList.set(Integer.valueOf(index),algoInputObject);
+                admin.setAlgoInputObjectList(algoInputObjectList);
+                adminRepository.save(admin);
+                return algoInputObject;
             }
             return null;
         }
@@ -295,7 +366,7 @@ public class SchedulerServiceImpl implements SchedulerService{
     }
 
     @Override
-    public Boolean isValidInterviewer(InterviewerDto interviewerDto) {
+    public Boolean isValidInterviewer(InterviewerDto interviewerDto){
         if(interviewerRepository.existsById(interviewerDto.getEmail())){
             return true;
         }

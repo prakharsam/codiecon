@@ -519,12 +519,8 @@ def AlgorithmToGenerateInterviews():
 
 	f = open("/Users/sandeepgupta/Documents/codeicon/codiecon/src/main/resources/out","w+")
 	for key in day:
-		f.write(str(key))
-		f.write('\n')
-		f.write(str(len(day[key])))
-		f.write('\n')
 		for listOfTuple in range(len(day[key])):
-			f.write('%d %d %d\n'%(day[key][listOfTuple][0],day[key][listOfTuple][1][0],day[key][listOfTuple][1][1]))
+			f.write('%d %d %d %d\n'%(key,day[key][listOfTuple][0],day[key][listOfTuple][1][0],day[key][listOfTuple][1][1]))
 # if ( __name__ == "main"):
 
 
