@@ -1,8 +1,14 @@
 package com.coviam.codiecon.service;
+import com.coviam.codiecon.Exceptions.CustomException;
 import com.coviam.codiecon.dto.AlgoInputObject;
 import com.coviam.codiecon.dto.CandidateDto;
 import com.coviam.codiecon.dto.InterviewerDto;
 import com.coviam.codiecon.dto.UploadDto;
+import com.coviam.codiecon.email.CandidateLoginAndSetPrefferedTiming;
+import com.coviam.codiecon.email.InterviewerTiming;
+import com.coviam.codiecon.email.MailElements;
+import com.coviam.codiecon.email.MailSender;
+import com.coviam.codiecon.model.Admin;
 import com.coviam.codiecon.model.Candidate;
 import com.coviam.codiecon.model.Interviewer;
 import com.coviam.codiecon.repository.AdminRepository;
@@ -10,14 +16,15 @@ import com.coviam.codiecon.repository.CandidateRepository;
 import com.coviam.codiecon.repository.InterviewerRepository;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -30,6 +37,12 @@ public class UploadServiceImpl implements UploadService{
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Value("${redirectLinkCandidate}")
+    private String redirectLinkCandidate;
+
+    @Value("${redirectLinkInterviewer}")
+    private String redirectLinkInterviewer;
 
     public void batchStoreCandidate(String email,List<Candidate> candidateList) {
         for (int i = 0; i < candidateList.size(); i++) {
@@ -142,4 +155,33 @@ public class UploadServiceImpl implements UploadService{
         }
     }
 
+    public void SendEmails(String email) {
+        MailSender mailSender = new MailSender();
+        Optional<Admin> adminOpt=adminRepository.findByEmail(email);
+        Admin admin=adminOpt.get();
+        List<AlgoInputObject> inputObjectList= admin.getAlgoInputObjectList();
+        int lastIndex=inputObjectList.size()-1;
+
+        List<CandidateDto> candidateList= inputObjectList.get(lastIndex).getCandidateDtoList();
+        for(CandidateDto candidate:candidateList){
+            MailElements mailElements = new MailElements(candidate.getEmail(),"Response Mail - Interview");
+            CandidateLoginAndSetPrefferedTiming candidateLoginAndSetPrefferedTiming = new CandidateLoginAndSetPrefferedTiming(candidate.getPassword(),redirectLinkCandidate);
+            try {
+                mailSender.sendEmail(mailElements,"candidate_login_set_preference",candidateLoginAndSetPrefferedTiming,null,null,null);
+            } catch (CustomException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<InterviewerDto> interviewerList= inputObjectList.get(lastIndex).getInterviewerDtoList();
+        for(InterviewerDto interviewer:interviewerList){
+            MailElements mailElements = new MailElements(interviewer.getEmail(),"Interview-Timing Set Preference");
+            InterviewerTiming interviewerTiming = new InterviewerTiming(redirectLinkInterviewer);
+            try {
+                mailSender.sendEmail(mailElements,"interviewer_login_set_preference",null,null,null,interviewerTiming);
+            } catch (CustomException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

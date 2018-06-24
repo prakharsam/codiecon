@@ -147,7 +147,12 @@ public class SchedulerController {
         uploadService.uploadFileInterview(email,multiPartFile);
         return ("uploaded Interviewer file successfully");
     }
-
+    @RequestMapping(value="/submit/{email}",method = RequestMethod.GET)
+    public String submitUploadFiles(@PathVariable String email)
+    {
+        uploadService.SendEmails(email);
+        return ("Emails Sent");
+     }
     @RequestMapping("/get-output-by-id")
     public ResponseDto<?> getOutputById(@RequestParam String email,@RequestParam Integer index){
         return new ResponseDto<>(schedulerService.getAlgoOutputObject(email,index));
