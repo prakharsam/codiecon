@@ -154,7 +154,6 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
             $location.path('/candidate-schedule');
         }, function errorCallback(response) {
             toastr.error("Error");
-            // alert("Error");
         });
     }
 
@@ -164,18 +163,25 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
             url: "http://localhost:8080/schedule/get-all-schedule?email=" + $rootScope.candidate_email,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
-            // alert("Hogya");
             // $location.path('/candidate-schedule');
             $scope.scheduleDetails = response.data;
 
         }, function errorCallback(response) {
             toastr.error("Error");
-            // alert("Error");
         });
     };
 
     $scope.scheduleInterview = function () {
-
+        var request = $http({
+            method: "GET",
+            url: "http://localhost:8080/schedule/interview-scheduling?email=" + $rootScope.candidate_email,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response) {
+            // $location.path('/schedule');
+            $scope.finalSchedule = response.data;
+        }, function errorCallback(response) {
+            toastr.error("Error");
+        });
     };
 
     $scope.scheduleDetails = function(index) {
@@ -184,12 +190,10 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
             url: "http://localhost:8080/schedule/get-schedule-by-id?email=" + $rootScope.candidate_email+"&index="+index,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
-            // alert("Hogya");
             $scope.schedule = response.data;
             $location.path('/schedule');
         }, function errorCallback(response) {
             toastr.error("Error");
-            // alert("Error");
         });
     };
 
