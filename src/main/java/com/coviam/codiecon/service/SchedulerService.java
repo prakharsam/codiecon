@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface SchedulerService {
 
+    AlgoOutputObject getAlgoOutputObject(String email,Integer index);
+
     List<AlgoInputObject> getAllAlgoinputObject(String email);
 
     AlgoInputObject getAlgoInputObjectById(String email,String index);
@@ -22,11 +24,11 @@ public interface SchedulerService {
 
     Boolean inputAll(InputAllObject inputAllObject);
 
-    boolean candidatePreference(String email, CandidatePreferenceDto candidatePreferenceDto);
+    Boolean candidatePreference(String email, CandidatePreferenceDto candidatePreferenceDto);
 
-    boolean interviewerPreference(String email, List<String> preferenceDtos);
+    Boolean interviewerPreference(String email, List<String> preferenceDtos);
 
-    String runPythonScript(String email);
+    String runPythonScript(String email,Integer index);
 
     String checkCandidateAuthentication(String email, String pass);
 

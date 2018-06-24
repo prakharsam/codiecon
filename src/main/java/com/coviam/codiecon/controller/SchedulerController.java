@@ -1,13 +1,9 @@
 package com.coviam.codiecon.controller;
 
 import com.coviam.codiecon.dto.*;
-import com.coviam.codiecon.model.Candidate;
 import com.coviam.codiecon.service.SchedulerService;
 import com.coviam.codiecon.service.UploadService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,7 +55,7 @@ public class SchedulerController {
     }
 
     @RequestMapping("/interviewer")
-    public boolean interviewer(@RequestParam String email, List<String> preferenceDtos) {
+    public boolean interviewer(@RequestParam String email,@RequestBody List<String> preferenceDtos) {
         return schedulerService.interviewerPreference(email,preferenceDtos);
     }
 
@@ -88,8 +84,8 @@ public class SchedulerController {
     }
 
     @RequestMapping("/interview-scheduling")
-    public String interviewScheduling(@RequestParam String email){
-        return schedulerService.runPythonScript(email);
+    public String interviewScheduling(@RequestParam String email,@RequestParam Integer index){
+        return schedulerService.runPythonScript(email,index);
     }
 
     @RequestMapping(value = "/candidate-auth", method = RequestMethod.POST)
@@ -151,11 +147,14 @@ public class SchedulerController {
         uploadService.uploadFileInterview(email,multiPartFile);
         return ("uploaded Interviewer file successfully");
     }
-
     @RequestMapping(value="/submit/{email}",method = RequestMethod.GET)
     public String submitUploadFiles(@PathVariable String email)
     {
         uploadService.SendEmails(email);
         return ("Emails Sent");
+     }
+    @RequestMapping("/get-output-by-id")
+    public ResponseDto<?> getOutputById(@RequestParam String email,@RequestParam Integer index){
+        return new ResponseDto<>(schedulerService.getAlgoOutputObject(email,index));
     }
 }
