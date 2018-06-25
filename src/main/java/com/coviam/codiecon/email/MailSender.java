@@ -42,23 +42,18 @@ public class MailSender {
         if(mailType==null)
             throw new CustomException("mailType is null");
 
-        if(mailType!=CANDIDATE_VERIFICATION || mailType != CANDIDATE_INTERVIEW || mailType != INTERVIEWER_INTERVIEW || mailType != INTERVIEWER_VERIFICATION)
+        if(mailType!=CANDIDATE_VERIFICATION && mailType != CANDIDATE_INTERVIEW && mailType != INTERVIEWER_INTERVIEW && mailType != INTERVIEWER_VERIFICATION)
             throw new CustomException("mailType invalid");
-
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
         try {
-
             String context = set_context(mailObject,mailType,candidateLoginAndSetPrefferedTiming, candidateInterviewDetail, interviewDetailsInterviewer,interviewerTiming);
-
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
             mimeMessageHelper.setSubject(mailObject.getSubjectOfMail());
             mimeMessageHelper.setFrom(emailSender);
             mimeMessageHelper.setTo(mailObject.getEmail());
-
             mimeMessageHelper.setText(context, true);
-
             logger.info("Sending...");
             mailSender.send(mimeMessageHelper.getMimeMessage());
             logger.info("Done!");

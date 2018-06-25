@@ -147,11 +147,10 @@ public class SchedulerController {
         uploadService.uploadFileInterview(email,multiPartFile);
         return ("uploaded Interviewer file successfully");
     }
-    @RequestMapping(value="/submit/{email}",method = RequestMethod.GET)
-    public String submitUploadFiles(@PathVariable String email)
-    {
+    @RequestMapping(value="/send-emails-before",method = RequestMethod.GET)
+    public ResponseDto<?> sendEmailsBefore(@RequestParam String email){
         uploadService.SendEmails(email);
-        return ("Emails Sent");
+        return new ResponseDto<String>("Emails Sent");
      }
     @RequestMapping(value = "/get-output-by-id",method = RequestMethod.GET)
     public ResponseDto<?> getOutputById(@RequestParam String email,@RequestParam Integer index){

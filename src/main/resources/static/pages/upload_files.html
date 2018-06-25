@@ -8,10 +8,10 @@
 
 <div class="jumbotron">
 	<div class="container">
-		<center>Upload File </center>
+		<center> <h1> Upload File </h1> </center>
 		<h3> Step 2 </h3>
 		<iframe width="250" height="50" border="0" name="dummyframe" id="dummyframe" style="margin-left:100px;"></iframe>
-		<form class="form-row" id="upload-file-candidates" enctype="multipart/form-data" method="post" action="http://localhost:8080/schedule/upload-candidate/{{adminEmail}}" target="dummyframe">
+		<form class="form-row" id="upload-file-candidates" enctype="multipart/form-data" method="post" action="{{urlCandidate}}" target="dummyframe">
 			<div class="form-group col-12">
 				<label>Upload Candidate File</label>
 				<input type="file" name="upload_candidate_file" id="upload_candidate_file" class="form-control-file">
@@ -23,7 +23,7 @@
 		</form>
 		<hr>
 		<iframe width="250" height="50" border="0" name="dummyframe1" id="dummyframe1" style="margin-left:100px;" ></iframe>
-		<form class="form-row" enctype="multipart/form-data" method="post" action="http://localhost:8080/schedule/upload-interview/{{adminEmail}}" target="dummyframe1">
+		<form class="form-row" enctype="multipart/form-data" method="post" action="{{urlInterview}}" target="dummyframe1">
 			<div class="form-group col-12">
 				<label>Upload Interviewer File</label>
 				<input type="file" name="upload_interviewer_file" class="form-control-file">
@@ -32,9 +32,6 @@
 				<input type="submit" value="Upload Interviewer file" class="btn btn-outline-success">
 			</div>
 		</form>
-
-		<div class="" style="padding-left: 75%">
-			<button value="sendPreferenceEmail" class="btn btn-outline-success" ng-onclick=""> Send Preference Email </button>
-		</div>
+		<center> <button class="btn btn-outline-success" ng-click="sendEmailsBefore()"> Send Preference Email </button></center>
 	</div>
 </div>

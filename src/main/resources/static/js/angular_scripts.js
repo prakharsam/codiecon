@@ -101,6 +101,8 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
                 if(response.data.response == true){
 //                    console.log(response.data.response);
                     $rootScope.admin_email = admin_email;
+                    $scope.urlCandidate = "http://localhost:8080/schedule/upload-candidate/" + $rootScope.admin_email;
+                    $scope.urlInterview = "http://localhost:8080/schedule/upload-interview/" + $rootScope.admin_email;
                     $location.path('/history');
                 }
             }, function errorCallback(response) {
@@ -258,5 +260,18 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
 
     $scope.setHistoryToCreate = function(){
         $location.path('/create-interview')
-    }
+    };
+
+    $scope.sendEmailsBefore = function(){
+        var request = $http({
+            method: "GET",
+            url: "http://localhost:8080/schedule/send-emails-before/?email=" + $rootScope.admin_email,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response) {
+//            $scope.schedule = response.data;
+            $location.path('/history');
+        }, function errorCallback(response) {
+            toastr.error("Error");
+        });
+    };
 });
