@@ -153,7 +153,7 @@ public class SchedulerController {
         uploadService.SendEmails(email);
         return ("Emails Sent");
      }
-    @RequestMapping("/get-output-by-id")
+    @RequestMapping(value = "/get-output-by-id",method = RequestMethod.GET)
     public ResponseDto<?> getOutputById(@RequestParam String email,@RequestParam Integer index){
         return new ResponseDto<>(schedulerService.getAlgoOutputObject(email,index));
     }

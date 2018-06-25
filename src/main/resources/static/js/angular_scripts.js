@@ -2,6 +2,9 @@ var app = angular.module('InterviewScheduler', ['ngRoute', 'toastr']);
 
 app.config(function ($routeProvider) {
     $routeProvider
+        .when("/", {
+            templateUrl: "pages/admin-login.html"
+        })
         .when("/login", {
             templateUrl: "pages/admin-login.html"
         })
@@ -15,7 +18,7 @@ app.config(function ($routeProvider) {
             templateUrl: "pages/hr_set_time_schedule.html"
         })
         .when("/create-interview", {
-            templateUrl: "pages/upload_candidates.html"
+            templateUrl: "pages/upload_basic_interview_details.html"
         })
         .when("/upload-files", {
             templateUrl: "pages/upload_files.html"
@@ -28,6 +31,9 @@ app.config(function ($routeProvider) {
         })
         .when("/schedule", {
             templateUrl: "pages/schedule.html"
+        })
+        .when("/history", {
+            templateUrl: "pages/admin_history.html"
         });
 });
 
@@ -77,7 +83,31 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
             // alert("Error");
             toastr.error("Error");
         });
-    }
+    };
+
+    $scope.AdminLogin = function () {
+            var admin_email = document.getElementById("admin_email").value;
+            var admin_pass = document.getElementById("admin_pass").value;
+            var request = $http({
+                method: "POST",
+                url: "http://localhost:8080/schedule/valid-admin",
+                headers: {'Content-Type': 'application/json'},
+                data: {
+                    "name": "",
+                    "email": admin_email,
+                    "password": admin_pass
+                }
+            }).then(function successCallback(response) {
+                if(response.data.response == true){
+//                    console.log(response.data.response);
+                    $rootScope.admin_email = admin_email;
+                    $location.path('/history');
+                }
+            }, function errorCallback(response) {
+                // alert("Error");
+                toast.error("Error");
+            });
+        };
 
     $scope.setCandidatePreference = function () {
         var preference = [];
@@ -120,7 +150,7 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
         }
         $scope.count = 0;
         $scope.interviewDate = array;
-    }
+    };
 
     $scope.scheduleInterviewTime = function () {
         $scope.schedule = []
@@ -155,17 +185,17 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
         }, function errorCallback(response) {
             toastr.error("Error");
         });
-    }
+    };
 
-    $scope.getEmployeeSchedule = function () {
+    $scope.getAllSchedule = function () {
         var request = $http({
             method: "GET",
-            url: "http://localhost:8080/schedule/get-all-schedule?email=" + $rootScope.candidate_email,
+            url: "http://localhost:8080/schedule/get-all-schedule?email=" + $rootScope.admin_email,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
             // $location.path('/candidate-schedule');
-            $scope.scheduleDetails = response.data;
-
+            console.log(response.data);
+            $scope.scheduleDetails = response.data.response;
         }, function errorCallback(response) {
             toastr.error("Error");
         });
@@ -178,13 +208,25 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
             // $location.path('/schedule');
+        }, function errorCallback(response) {
+            toastr.error("Error");
+        });
+    };
+
+    $scope.getFinalSchedule = function (index) {
+        var request = $http({
+            method: "GET",
+            url: "http://localhost:8080/schedule/get-output-by-id?email=" + $rootScope.candidate_email + "&index=" + index,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response) {
+            // $location.path('/schedule');
             $scope.finalSchedule = response.data;
         }, function errorCallback(response) {
             toastr.error("Error");
         });
     };
 
-    $scope.scheduleDetails = function(index) {
+    $scope.showScheduleDetails = function(index) {
         var request = $http({
             method: "GET",
             url: "http://localhost:8080/schedule/get-schedule-by-id?email=" + $rootScope.candidate_email+"&index="+index,
@@ -197,4 +239,24 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
         });
     };
 
+    $scope.createInterview = function(index){
+        var startdate = document.getElementById("start_date").value;
+        var numberOfDays = document.getElementById("number_of_days").value;
+        var interviewDuration = document.getElementById("interviewer_duration").value;
+        var request = $http({
+            method: "GET",
+            url: "http://localhost:8080/schedule/schedule-basic-details/?email=" + $rootScope.admin_email+"&startDate="+startdate+"&numberOfDays="+numberOfDays+"&interviewDuration="+interviewDuration,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response) {
+//            $scope.schedule = response.data;
+            $scope.basicInterviewDetails = response.data.response;
+            $location.path('/upload-files');
+        }, function errorCallback(response) {
+            toastr.error("Error");
+        });
+    };
+
+    $scope.setHistoryToCreate = function(){
+        $location.path('/create-interview')
+    }
 });

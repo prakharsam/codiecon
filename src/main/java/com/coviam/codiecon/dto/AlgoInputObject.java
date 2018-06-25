@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class AlgoInputObject {
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     Date startDate;
     Integer numberOfDays;
     Integer interviewDuration;

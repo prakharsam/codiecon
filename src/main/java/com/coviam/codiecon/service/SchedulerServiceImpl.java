@@ -378,7 +378,7 @@ public class SchedulerServiceImpl implements SchedulerService{
         if(adminRepository.existsById(email)){
             AlgoInputObject algoInputObject = new AlgoInputObject();
             try {
-                algoInputObject.setStartDate(new SimpleDateFormat("dd/MM/yyyy").parse(startDate));
+                algoInputObject.setStartDate(new SimpleDateFormat("dd-MM-yyyy").parse(startDate));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -390,10 +390,13 @@ public class SchedulerServiceImpl implements SchedulerService{
             admin = adminRepository.findById(email).get();
             List<AlgoInputObject> algoInputObjectList = admin.getAlgoInputObjectList();
             if(algoInputObjectList == null){
+
                 List<AlgoInputObject> algoInputObjectList1 = new ArrayList<>();
                 algoInputObjectList1.add(algoInputObject);
+
                 List<AlgoOutputObject> algoOutputObjectList1 = new ArrayList<>();
-                algoInputObjectList1.add(null);
+                algoOutputObjectList1.add(null);
+
                 admin.setAlgoInputObjectList(algoInputObjectList1);
                 admin.setAlgoOutputObjectList(algoOutputObjectList1);
             }

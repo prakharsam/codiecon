@@ -6,21 +6,21 @@
 </nav>
 <br>
 
-<div class="jumbotron">
+<div class="jumbotron" ng-init="getFinalSchedule()">
 	<div class="container">
 		<form class="form-row" ng-submit="scheduleInterview()">
 		<table class="table">
 			<tr>
-				<th>Start Date</th>
-				<th>No of Days</th>
-				<th>Interview Duration</th>
-				<th></th>
+				<th>Date</th>
+				<th>Time</th>
+				<th>Interviewer</th>
+				<th>Candidate</th>
 			</tr>
-			<tr ng-repeat="schedule in scheduleDetails">
-				<td>{{schedule.startDate}}</td>
-				<td>{{schedule.numberOfDays}}</td>
-				<td>{{schedule.interviewDuration}}</td>
-				<td><button ng-click="scheduleDetails($index)">Show</button></td>
+			<tr ng-repeat="item in finalSchedule">
+				<td>{{item.day}}</td>
+				<td>{{item.timeSlot}}</td>
+				<td>{{item.interviewer}}</td>
+				<td>{{item.candidate}}</td>
 			</tr>
 			<!--<input type="submit" value="Schedule Interview" class="btn btn-outline-success">-->
 		</table>
