@@ -3,6 +3,16 @@ package com.coviam.codiecon.email;
 public class InterviewerTiming {
 
     private String RedirectLink;
+    private String password;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public InterviewerTiming(String redirectLink, String password) {
+        RedirectLink = redirectLink;
+        this.password = password;
+    }
 
     public InterviewerTiming() {
     }

@@ -26,7 +26,7 @@ ONE_INTERVIEW_TIME = 1
 CHROMOSOME_SIZE = 0
 POPULATION_SIZE = 100
 RATE = 0.1
-NO_OF_ITERATION = 10
+NO_OF_ITERATION = 100
 TOTAL_SLOTS_OF_HR = 0
 
 # To generate initial Population
@@ -67,9 +67,9 @@ def DNA():
 			hrPairCandidate.append(key)
 			hrPairCandidate.append(-1)
 			# print ((day-1)*13 + fromTime)
-			eachHourChromosome = chromosome[(day-1)*(int(12*ONE_INTERVIEW_TIME)+1) + fromTime]
+			eachHourChromosome = chromosome[(day)*(int(12*ONE_INTERVIEW_TIME)+1) + fromTime]
 			eachHourChromosome.append(hrPairCandidate)
-			chromosome[(day-1)*(int(12*ONE_INTERVIEW_TIME)+1) + fromTime] = eachHourChromosome
+			chromosome[day*(int(12*ONE_INTERVIEW_TIME)+1) + fromTime] = eachHourChromosome
 
 	# For memory efficiency - No HR available for this time slot.
 	# print (chromosome)
@@ -458,15 +458,14 @@ def mainInput():
 	for i in range(HR_COUNT):
 		arr = []
 		arr = list(map(int,input().split()))
-		# print (arr)
 		count = 1
 		timeShiftAvailable = []
 		TOTAL_SLOTS_OF_HR += 1
-		for j in range(arr[0]):
+		for j in range(arr[0]//2):
 			timeAvailable = []
 			timeAvailable.append(arr[count])
 			timeAvailable.append(arr[count+1])
-			count+=2;
+			count+=2
 			TOTAL_SLOTS_OF_HR += 1
 			timeShiftAvailable.append(timeAvailable)
 
@@ -479,12 +478,10 @@ def mainInput():
 
 	
 	# print
-	print('')
-	print('Days :' + str(DAYS))
-	print('candidate :' + str(CANDIDATE))
-	print('HR :' + str(HR))
-	print (' : ' + str())
-
+	print('\n')
+	print('Days :' + str(DAYS)+'\n')
+	print('candidate :' + str(CANDIDATE)+'\n')
+	print('HR :' + str(HR)+'\n')
 
 def AlgorithmToGenerateInterviews():
 	population = generatePopulation()		 	# to generate Population
@@ -499,7 +496,7 @@ def AlgorithmToGenerateInterviews():
 		if(all_time_best_fitness < bestFitness[0]):
 			all_time_best_fitness = bestFitness[0]
 			all_time_best_chromosome = population[bestFitness[1]]
-		# print ('Generation : ' + str(i) + ' Best fitness value'  + str(bestFitness) + ' Chromosome :' + str(population[bestFitness[1]]))
+		print ('Generation : ' + str(i) + ' Best fitness value'  + str(bestFitness) + ' Chromosome :' + str(population[bestFitness[1]]))
 		population = nextGeneration(population,fitnessScore)
 
 	# print ('All time best fitness over the generation : ' + str(all_time_best_fitness))

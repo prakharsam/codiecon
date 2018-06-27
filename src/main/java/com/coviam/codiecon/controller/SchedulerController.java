@@ -50,7 +50,7 @@ public class SchedulerController {
     }
 
     @RequestMapping("/candidate-preference")
-    public boolean candidate(@RequestParam String email,@RequestBody CandidatePreferenceDto candidatePreferenceDto) {
+    public Boolean candidate(@RequestParam String email,@RequestBody CandidatePreferenceDto candidatePreferenceDto) {
         return schedulerService.candidatePreference(email,candidatePreferenceDto);
     }
 
@@ -84,8 +84,9 @@ public class SchedulerController {
     }
 
     @RequestMapping("/interview-scheduling")
-    public String interviewScheduling(@RequestParam String email,@RequestParam Integer index){
-        return schedulerService.runPythonScript(email,index);
+    public ResponseDto<?> interviewScheduling(@RequestParam String email,@RequestParam Integer index){
+        String result = schedulerService.runPythonScript(email,index);
+        return new ResponseDto<String>(result);
     }
 
     @RequestMapping(value = "/candidate-auth", method = RequestMethod.POST)

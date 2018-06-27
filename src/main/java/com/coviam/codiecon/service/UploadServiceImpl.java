@@ -190,6 +190,7 @@ public class UploadServiceImpl implements UploadService{
         for(CandidateDto candidate:candidateList){
             MailElements mailElements = new MailElements(candidate.getEmail(),"Response Mail - Interview");
             CandidateLoginAndSetPrefferedTiming candidateLoginAndSetPrefferedTiming = new CandidateLoginAndSetPrefferedTiming(candidate.getPassword(),redirectLinkCandidate);
+            System.out.println(candidateLoginAndSetPrefferedTiming);
             try {
                 sendEmail(mailElements,"candidate_login_set_preference",candidateLoginAndSetPrefferedTiming,null,null,null);
             } catch (CustomException e) {
@@ -199,7 +200,7 @@ public class UploadServiceImpl implements UploadService{
         List<InterviewerDto> interviewerList= inputObjectList.get(lastIndex).getInterviewerDtoList();
         for(InterviewerDto interviewer:interviewerList){
             MailElements mailElements = new MailElements(interviewer.getEmail(),"Interview-Timing Set Preference");
-            InterviewerTiming interviewerTiming = new InterviewerTiming(redirectLinkInterviewer);
+            InterviewerTiming interviewerTiming = new InterviewerTiming(redirectLinkInterviewer,interviewer.getPassword());
             try {
                 sendEmail(mailElements,"interviewer_login_set_preference",null,null,null,interviewerTiming);
             } catch (CustomException e) {
@@ -268,7 +269,7 @@ public class UploadServiceImpl implements UploadService{
                     "    <div class =\"main\">\n" +
                     "        <br><div><h4>Login Details</h4><hr>UserId<br>"+mailObject.getEmail()+"<br><hr></div>\n" +
                     "        Login Password<br>"+candidateLoginAndVerification.getGeneratedPassword()+"<br><hr>\n" +
-                    "        <hr><a href="+candidateLoginAndVerification.getRedirectLink()+">Visit Link to login</a><br>\n" +
+                    "        <hr><a href='"+candidateLoginAndVerification.getRedirectLink()+"'>visit here to go to Login</a><br>\n" +
                     "    <br></div>\n" +
                     "    </center>\n" +
                     "\n" +
@@ -338,7 +339,7 @@ public class UploadServiceImpl implements UploadService{
 
             context += "<table style=\"width:45%\">\n" +
                     "  <tr>\n" +
-                    "    <th>candidateName</th>\n" +
+//                    "    <th>candidateName</th>\n" +
                     "    <th>candidateEmail</th> \n" +
                     "    <th>startTime</th>\n" +
                     "    <th>endTime</th>\n" +
@@ -347,7 +348,7 @@ public class UploadServiceImpl implements UploadService{
 
             for( InterviewerCandidateMapping interviewerCandidateMapping:interviewDetailsInterviewer.getInterviewDetails()){
                 context += "  <tr>\n" +
-                        "    <th>"+interviewerCandidateMapping.getCandidateName()+"</th>\n" +
+//                        "    <th>"+interviewerCandidateMapping.getCandidateName()+"</th>\n" +
                         "    <th>"+interviewerCandidateMapping.getCandidateEmail()+"</th>\n" +
                         "    <th>"+interviewerCandidateMapping.getStartTime()+"</th>\n" +
                         "    <th>"+interviewerCandidateMapping.getEndTime()+"</th>\n" +
@@ -387,8 +388,8 @@ public class UploadServiceImpl implements UploadService{
                     "    <center>\n" +
                     "    <div class =\"main\">\n" +
                     "        <br><div><h4>Login Details</h4><hr>UserId<br>"+mailObject.getEmail()+"<br><hr></div>\n" +
-                    "         Login Password<br>"+candidateLoginAndVerification.getGeneratedPassword()+"<br><hr>\n" +
-                    "        <hr><a href="+interviewerTiming.getRedirectLink()+">Visit Link to login and set preferred timing for interviews</a><br>\n" +
+                    "         Login Password<br>"+interviewerTiming.getPassword()+"<br><hr>\n" +
+                    "        <hr><a href='"+interviewerTiming.getRedirectLink()+"'>Visit Link to login and set preferred timing for interviews</a><br>\n" +
                     "    <br></div>\n" +
                     "    </center>\n" +
                     "\n" +

@@ -95,7 +95,16 @@ public class SchedulerServiceImpl implements SchedulerService{
     public Boolean interviewerPreference(String email, List<String> preferenceDtos) {
         if(interviewerRepository.existsById(email)){
             Interviewer interviewer =  interviewerRepository.findById(email).get();
-            interviewer.setAvailablityOfInterviewer(preferenceDtos);
+            List<String> stringList = new ArrayList<>();
+            for(int i=0;i<preferenceDtos.size();i++){
+                for(int j=0;j<preferenceDtos.get(i).length();j++){
+                    if(preferenceDtos.get(i).charAt(j) == 1){
+                        stringList.add(String.valueOf(i));
+                        stringList.add(String.valueOf(j+1));
+                    }
+                }
+            }
+            interviewer.setAvailablityOfInterviewer(stringList);
             interviewerRepository.save(interviewer);
             return true;
         }
@@ -137,11 +146,11 @@ public class SchedulerServiceImpl implements SchedulerService{
             List<AlgoOutputObject> algoOutputObjectList =  admin.getAlgoOutputObjectList();
             algoOutputObjectList.set(index,algoOutputObject);
             adminRepository.save(admin);
+            return true;
         }
         catch (IOException e){
             System.out.println(e);
         }
-
         return false;
     }
 
@@ -255,13 +264,11 @@ public class SchedulerServiceImpl implements SchedulerService{
 //        for(CandidateInterviewerMap candidateInterviewerMap : interviewList){
 //            candidateInterviewMapRepository.save(candidateInterviewerMap);
 //        }
-
-
     }
 
     @Override
     public String checkCandidateAuthentication(String email, String pass) {
-        Candidate  candidateDetails = candidateRepository.findByEmail(email);
+        Candidate candidateDetails = candidateRepository.findByEmail(email);
         if(null != candidateDetails){
             if(pass.equals(candidateDetails.getPassword())) {
                 return email;
@@ -312,7 +319,7 @@ public class SchedulerServiceImpl implements SchedulerService{
     @Override
     public AlgoInputObject getAlgoInputObjectById(String email, String index) {
         if(adminRepository.existsById(email)){
-            if(adminRepository.findById(email).get().getAlgoInputObjectList().size() < Integer.valueOf(index)){
+            if(adminRepository.findById(email).get().getAlgoInputObjectList().size() > Integer.valueOf(index)){
                 Admin admin = adminRepository.findById(email).get();
                 AlgoInputObject algoInputObject =  admin.getAlgoInputObjectList().get(Integer.valueOf(index));
                 List<CandidateDto> candidateDtoList = algoInputObject.getCandidateDtoList();

@@ -6,9 +6,9 @@
 </nav>
 <br>
 
-<div class="jumbotron" ng-init="getFinalSchedule()">
+<div class="jumbotron">
 	<div class="container">
-		<form class="form-row" ng-submit="scheduleInterview()">
+		<form class="form-row">
 		<table class="table">
 			<tr>
 				<th>Date</th>
@@ -16,10 +16,11 @@
 				<th>Interviewer</th>
 				<th>Candidate</th>
 			</tr>
-			<tr ng-repeat="item in finalSchedule">
-				<td>{{item.day}}</td>
-				<td>{{item.timeSlot}}</td>
-				<td>{{item.interviewer}}</td>
+			<!--{{finalSchedule}}-->
+			<tr ng-repeat="item in finalSchedule.interviewCandidateMappedList">
+				<td> {{item.day}} </td>
+				<td> {{8+item.timeSlot}} - {{8+item.timeSlot+1}}</td>
+				<td> {{item.interviewer}} </td>
 				<td>{{item.candidate}}</td>
 			</tr>
 			<!--<input type="submit" value="Schedule Interview" class="btn btn-outline-success">-->

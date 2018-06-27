@@ -39,6 +39,7 @@ app.config(function ($routeProvider) {
 
 app.controller('MainController', function ($scope, $location, $http, $rootScope, toastr) {
 
+    $scope.loading = false;
     $scope.CheckLogin = function () {
         var candidate_email = document.getElementById("candidate_email").value;
         var candidate_pass = document.getElementById("candidate_pass").value;
@@ -49,7 +50,7 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
             data: {
                 "name": "",
                 "email": candidate_email,
-                "pass": candidate_pass,
+                "password": candidate_pass,
                 "day": 7,
                 "preference": ""
             }
@@ -67,13 +68,13 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
         var interviewer_pass = document.getElementById("interviewer_pass").value;
         var request = $http({
             method: "POST",
-            url: "http://localhost:8080/schedule/candidate-auth",
+            url: "http://localhost:8080/schedule/interviewer-auth",
             headers: {'Content-Type': 'application/json'},
             data: {
                 "name": "",
                 "email": interviewer_email,
-                "pass": interviewer_pass,
-                "day": 7,
+                "password": interviewer_pass,
+                "day": 0,
                 "preference": ""
             }
         }).then(function successCallback(response) {
@@ -107,7 +108,7 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
                 }
             }, function errorCallback(response) {
                 // alert("Error");
-                toast.error("Error");
+                toastr.error("Error");
             });
         };
 
@@ -127,21 +128,20 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
         }
         var preferenceString = preference[1] + preference[2] + preference[3] + preference[4];
         var candidate_email_from_preference = document.getElementById("candidate_email_from_preference").value;
-
+        var preferredDate = document.getElementById("candidate_preferred_date").value;
         var request = $http({
             method: "POST",
             url: "http://localhost:8080/schedule/candidate-preference?email=" + candidate_email_from_preference,
             headers: {'Content-Type': 'application/json'},
             data: {
-                "day": 1,
+                "day": preferredDate,
                 "preference": preferenceString
             }
         }).then(function successCallback(response) {
-            alert("Hogya");
-            $location.path('/candidate-schedule');
-        }, function errorCallback(response) {
+            alert("Your Response has been Recorded");
+            $location.path('/candidate-login');
+        }, function errorCallback(response){
             toastr.error("Error");
-            // alert("Error");
         });
     };
 
@@ -182,8 +182,8 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
                 "preferenceDtos": $scope.schedule
             }
         }).then(function successCallback(response) {
-            // alert("Hogya");
-            $location.path('/candidate-schedule');
+            alert("Available time updated");
+            $location.path('/interviewer-login');
         }, function errorCallback(response) {
             toastr.error("Error");
         });
@@ -203,26 +203,41 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
         });
     };
 
+    $scope.getScheduleDetails = function(index){
+        var request = $http({
+            method: "GET",
+            url: "http://localhost:8080/schedule/get-schedule-by-id/?email=" + $rootScope.candidate_email+"&index="+index,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response) {
+            $scope.schedule = response.data.response;
+            console.log(response);
+        }, function errorCallback(response) {
+            toastr.error("Error");
+        });
+    }
+
     $scope.scheduleInterview = function () {
         var request = $http({
             method: "GET",
             url: "http://localhost:8080/schedule/interview-scheduling?email=" + $rootScope.candidate_email,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
-            // $location.path('/schedule');
+            console.log(response);
+//            $scope.schedule = response.data.response;
         }, function errorCallback(response) {
             toastr.error("Error");
         });
     };
 
-    $scope.getFinalSchedule = function (index) {
+    $scope.getFinalSchedule = function(index) {
         var request = $http({
             method: "GET",
-            url: "http://localhost:8080/schedule/get-output-by-id?email=" + $rootScope.candidate_email + "&index=" + index,
+            url: "http://localhost:8080/schedule/get-output-by-id?email=" + $rootScope.admin_email + "&index=" + index,
             headers: {'Content-Type': 'application/json'}
-        }).then(function successCallback(response) {
-            // $location.path('/schedule');
-            $scope.finalSchedule = response.data;
+        }).then(function successCallback(response){
+            $scope.finalSchedule = response.data.response;
+            console.log(response.data.response);
+            $location.path("/generate-interview-schedule");
         }, function errorCallback(response) {
             toastr.error("Error");
         });
@@ -231,11 +246,18 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
     $scope.showScheduleDetails = function(index) {
         var request = $http({
             method: "GET",
-            url: "http://localhost:8080/schedule/get-schedule-by-id?email=" + $rootScope.candidate_email+"&index="+index,
+            url: "http://localhost:8080/schedule/get-schedule-by-id/?email=" + $rootScope.admin_email+"&index="+index,
             headers: {'Content-Type': 'application/json'}
         }).then(function successCallback(response) {
-            $scope.schedule = response.data;
-            $location.path('/schedule');
+            if(response.data.response == false){
+                alert('Cannot fetch the details.');
+            }
+            else{
+                $scope.schedule = response.data.response;
+                console.log(response.data.response);
+                $location.path('/schedule');
+                $scope.indexOfAlgoInput = index;
+             }
         }, function errorCallback(response) {
             toastr.error("Error");
         });
@@ -263,15 +285,31 @@ app.controller('MainController', function ($scope, $location, $http, $rootScope,
     };
 
     $scope.sendEmailsBefore = function(){
+        $scope.loading = true;
         var request = $http({
             method: "GET",
             url: "http://localhost:8080/schedule/send-emails-before/?email=" + $rootScope.admin_email,
             headers: {'Content-Type': 'application/json'}
-        }).then(function successCallback(response) {
+        }).then(function successCallback(response){
 //            $scope.schedule = response.data;
             $location.path('/history');
+            $scope.loading = false;
         }, function errorCallback(response) {
             toastr.error("Error");
         });
     };
+
+    $scope.scheduleById = function(){
+        var request = $http({
+            method: "GET",
+            url: "http://localhost:8080/schedule/interview-scheduling/?email=" + $rootScope.admin_email + "&index="+$scope.indexOfAlgoInput,
+            headers: {'Content-Type': 'application/json'}
+        }).then(function successCallback(response){
+               $scope.getFinalSchedule($scope.indexOfAlgoInput);
+              $location.path('/history');
+        }, function errorCallback(response) {
+            //$location.path('/history');
+            toastr.error("Error");
+        });
+    }
 });
